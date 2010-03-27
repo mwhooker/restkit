@@ -14,7 +14,7 @@ class LRUCache(collections.MutableMapping):
         if value is None:
             raise KeyError
         return value
-    
+
     def __setitem__(self, key, value):
         self.engine.put(key, value)
 
@@ -27,10 +27,9 @@ class LRUCache(collections.MutableMapping):
 
     def __delitem__(self, key):
         raise NotImplementedError
-        
+
     def __iter__(self):
         raise NotImplementedError
 
     def __len__(self):
         return self.max_size
-
