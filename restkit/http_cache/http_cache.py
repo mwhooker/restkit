@@ -1,10 +1,13 @@
 import logging
+from restkit.http_cache import LRUCache
 from hashlib import md5
 
 log = logging.getLogger(__name__)
 
 class HttpCache(object):
 
+    def __init__(self, cache=LRUCache()):
+        self.cache_engine = cache
 
     def _make_key(self, req):
         return md5(str(req.method) + str(req.final_url) +
