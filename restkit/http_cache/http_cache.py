@@ -32,7 +32,7 @@ class HttpCache(object):
         if key in self.cache_engine:
             cache_obj = self.cache_engine[key]
 
-            log.debug("retrieved headers: %s" % cache_obj['headers'])
+            log.debug("injecting caching headers %s" % cache_obj['headers'])
             if 'etag' in cache_obj['headers']:
                 req.headers.append(('If-None-Match', cache_obj['headers']['etag']))
             if 'last-modified' in cache_obj['headers']:
@@ -54,11 +54,12 @@ class HttpCache(object):
         if req.parser.status_int == 200:
             headers = {}
             for key, value in req.parser.headers:
-                headers[key.lower()] = value
+                headers[key.lower()] = value.rstrip()
                 
             cache_obj = {'headers': headers, 'body': req.response_body}
             self.cache_engine[url_key] = cache_obj
         elif req.parser.status_int == 304:
+            log.debug('304 response found. returning cached body')
             cache_obj = self.cache_engine[url_key]
             req.response_body = cache_obj['body']
 
