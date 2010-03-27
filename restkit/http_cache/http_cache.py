@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 class HttpCache(object):
-    """filter for http caching.
+    """filter for http caching. Caches GET requests using supplied engine
 
     on response the filter stores the result in the storage engine, which by
     default is an in-memory LRU cache.
@@ -23,6 +23,11 @@ class HttpCache(object):
     'if-none-match' and 'if-modified-since' headers (if they exist) into the
     request headers. If a 304 status is returned on response, the filter will
     return the cached result.
+
+    TODO: 
+          1. have the option to send HEAD request in lieu of GET if we have
+              cache headers around
+          3. only store last-modified and etag headers
     """
 
     def __init__(self, cache=LRUCache()):
@@ -38,6 +43,11 @@ class HttpCache(object):
             1. search for request in cache
             2. inject if-none-match and If-Modified-Since headers
         """
+
+        # do not cache get requests
+        if req.method != "GET":
+            return
+
         key = self._make_key(req)
         log.debug("generating hash for request: %s" % key)
         if key in self.cache_engine:
@@ -58,6 +68,10 @@ class HttpCache(object):
             2. if status is 200
                 - add to cache
         """
+        # do not cache get requests
+        if req.method != "GET":
+            return
+
         url_key = self._make_key(req)
 
         if req.parser.status_int == 200:
