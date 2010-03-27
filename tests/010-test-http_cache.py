@@ -4,15 +4,19 @@
 # See the NOTICE for more information.
 
 import t
-from restkit import Resource
+from restkit import request
+from restkit.http_cache import HttpCache
 
 from _server_test import HOST, PORT
 
 
-"""
-def test_001():
-    u = "http://%s:%s" % (HOST, PORT)
-    r = Resource(u)
+@t.client_request("/cache", filters=[HttpCache()])
+def test_001(u, c):
+    
+    r = c.request(u)
     t.eq(r.status_int, 200)
-    t.eq(r.body, "welcome")
-"""
+    t.eq(r.body, "ok")
+
+    r = c.request(u)
+    t.eq(r.status_int, 304)
+    t.eq(r.body, "ok")

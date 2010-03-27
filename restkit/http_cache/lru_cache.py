@@ -26,10 +26,10 @@ class LRUCache(collections.MutableMapping):
             return False
 
     def __delitem__(self, key):
-        raise NotImplemented()
+        raise NotImplementedError
         
     def __iter__(self):
-        raise NotImplemented()
+        raise NotImplementedError
 
     def __len__(self):
         return self.max_size

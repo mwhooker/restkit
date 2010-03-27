@@ -120,6 +120,14 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
         elif path == "/pool":
             extra_headers = [('Content-type', 'text/plain')]
             self._respond(200, extra_headers, "ok")
+        elif path == "/cache":
+            etag = '"84d1-3e3073913b100"'
+            extra_headers = [('ETag', etag)]
+            sent_etag = self.headers.get('If-None-Match', '')
+            if sent_etag == etag:
+                self._respond(304, extra_headers, '') 
+            else: 
+                self._respond(200, extra_headers, "ok")
         else:
             self._respond(404, 
                 [('Content-type', 'text/plain')], "Not Found" )

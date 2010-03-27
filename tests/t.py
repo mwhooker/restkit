@@ -52,8 +52,9 @@ class response(object):
         
 class client_request(object):
     
-    def __init__(self, path, pool=False):
+    def __init__(self, path, pool=False, filters=[]):
         self.pool = pool
+        self.filters = filters
         if path.startswith("http://") or path.startswith("https://"):
             self.url = path
         else:
@@ -65,7 +66,8 @@ class client_request(object):
                 pool_instance = ConnectionPool()
             else:
                 pool_instance = None
-            cli = HttpConnection(pool_instance=None, timeout=0.5)
+            cli = HttpConnection(pool_instance=None, timeout=0.5, 
+                                 filters=self.filters)
             func(self.url, cli)
         run.func_name = func.func_name
         return run
