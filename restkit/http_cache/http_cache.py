@@ -5,8 +5,8 @@
 
 
 import logging
+import collections
 from restkit.http_cache import LRUCache
-from restkit import tee
 from hashlib import md5
 
 
@@ -14,10 +14,20 @@ log = logging.getLogger(__name__)
 
 
 class HttpCache(object):
-    ETAG_HEADER = 'If-None-Match'
-    MODIFIED_HEADER = 'If-Modified-Since'
+    """filter for http caching.
+
+    on response the filter stores the result in the storage engine, which by
+    default is an in-memory LRU cache.
+
+    on the next request for that resource, the filter will inject
+    'if-none-match' and 'if-modified-since' headers (if they exist) into the
+    request headers. If a 304 status is returned on response, the filter will
+    return the cached result.
+    """
 
     def __init__(self, cache=LRUCache()):
+        if not isinstance(cache, collections.MutableMapping):
+            raise TypeError
         self.cache_engine = cache
 
     def _make_key(self, req):
