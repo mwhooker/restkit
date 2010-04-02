@@ -99,7 +99,7 @@ Restkit has a basic `http caching`_ mechanism with pluggable storage engines.
 Using Caching
 +++++++++++++
 
-To use `http caching`, you can do::
+To use http caching, you can do::
 
   from restkit import request
   from restkit.http_cache import HttpCache
@@ -116,6 +116,7 @@ You can specify which storage engine to use by passing it in to HttpCache::
   #use LRU Caching. store up to 1000 objects
   cache = HttpCache(LRUCache(1000))
 
+.. _http caching: http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html
 
 
 Authentication
