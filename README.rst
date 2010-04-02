@@ -94,7 +94,7 @@ Using `eventlet <http://eventlet.net>`_ pool is definitely better since it allow
 Caching
 =======
 
-Restkit has a basic http caching mechanism with pluggable storage engines. 
+Restkit has a basic `http caching`_ mechanism with pluggable storage engines. 
 
 Using Caching
 +++++++++++++
