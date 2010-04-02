@@ -94,7 +94,28 @@ Using `eventlet <http://eventlet.net>`_ pool is definitely better since it allow
 Caching
 =======
 
-Restkit 
+Restkit has a basic http caching mechanism with pluggable storage engines. 
+
+Using Caching
++++++++++++++
+
+To use `http caching`, you can do::
+
+  from restkit import request
+  from restkit.http_cache import HttpCache
+
+  r = request('http://example.com', filters=[HttpCache()])
+
+Now, you can make that request again and the HttpCache filter will return the
+cached value.
+
+You can specify which storage engine to use by passing it in to HttpCache::
+  
+  from restkit.ext.lru_cache import LRUCache
+
+  #use LRU Caching. store up to 1000 objects
+  cache = HttpCache(LRUCache(1000))
+
 
 
 Authentication

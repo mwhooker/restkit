@@ -29,6 +29,8 @@ class HttpCache(object):
           1. have the option to send HEAD request in lieu of GET if we have
               cache headers around
           2. only store last-modified and etag headers
+          3. check the `Expires` header to see if we should even make a request
+            - see http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.2
     """
 
     def __init__(self, cache=BoundedDict()):
