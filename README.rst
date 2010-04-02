@@ -91,10 +91,16 @@ or if you use Eventlet::
 
 Using `eventlet <http://eventlet.net>`_ pool is definitely better since it allows you to define a timeout for connections. When timeout is reached and the connection is still in the pool, it will be closed.
 
+Caching
+=======
+
+Restkit 
+
+
 Authentication
 ==============
 
-Restkit support for now `basic authentication`_  and `OAuth`_. But any
+Restkit supports `basic authentication`_  and `OAuth`_ out of the box, but any
 other authentication schema can easily be added using http filters.
 
 Basic authentication

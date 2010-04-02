@@ -1,11 +1,14 @@
-import collections
+from restkit.http_cache import StorageInterface
 from repoze.lru import LRUCache as LRUCacheEngine
 
 
-class LRUCache(collections.MutableMapping):
+class LRUCache(StorageInterface):
     """In memory LRU cache"""
 
     def __init__(self, max_size=1024):
+        if max_size < 1:
+            raise ValueError(
+                "max_size must be a positive integer greater than 0")
         self.max_size = max_size
         self.engine = LRUCacheEngine(max_size)
 
@@ -24,12 +27,6 @@ class LRUCache(collections.MutableMapping):
             return True
         else:
             return False
-
-    def __delitem__(self, key):
-        raise NotImplementedError
-
-    def __iter__(self):
-        raise NotImplementedError
 
     def __len__(self):
         return self.max_size

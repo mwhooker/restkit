@@ -6,8 +6,9 @@
 
 import logging
 import collections
-from restkit.http_cache import LRUCache
 from hashlib import md5
+
+from restkit.http_cache.common import BoundedDict
 
 
 log = logging.getLogger(__name__)
@@ -24,13 +25,13 @@ class HttpCache(object):
     request headers. If a 304 status is returned on response, the filter will
     return the cached result.
 
-    TODO: 
+    TODO:
           1. have the option to send HEAD request in lieu of GET if we have
               cache headers around
-          3. only store last-modified and etag headers
+          2. only store last-modified and etag headers
     """
 
-    def __init__(self, cache=LRUCache()):
+    def __init__(self, cache=BoundedDict()):
         if not isinstance(cache, collections.MutableMapping):
             raise TypeError
         self.cache_engine = cache

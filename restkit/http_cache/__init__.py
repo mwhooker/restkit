@@ -1,3 +1,2 @@
-from restkit.http_cache.lru_cache import LRUCache
-from restkit.http_cache.http_cache import HttpCache
-
+from restkit.http_cache.filter import HttpCache
+from restkit.http_cache.common import StorageInterface, BoundedDict

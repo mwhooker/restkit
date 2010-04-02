@@ -234,13 +234,7 @@ class HTTPTestHandler(BaseHTTPRequestHandler):
             else:
                 self.error_Response()
         elif path == "/cache":
-            etag = '"84d1-3e3073913b100"'
-            extra_headers = [('ETag', etag)]
-            sent_etag = self.headers.get('If-None-Match', '')
-            if sent_etag == etag:
-                self._respond(304, extra_headers, '') 
-            else: 
-                self._respond(200, extra_headers, "ok")
+            self._respond(200, extra_headers, "ok")
         else:
             self.error_Response('Bad path')
             
