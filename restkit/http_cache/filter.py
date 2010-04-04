@@ -26,11 +26,18 @@ class HttpCache(object):
     return the cached result.
 
     TODO:
-          1. have the option to send HEAD request in lieu of GET if we have
-              cache headers around
-          2. only store last-modified and etag headers
-          3. check the `Expires` header to see if we should even make a request
-            - see http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.2
+          * follow cachability guidelines:
+            - http://tools.ietf.org/html/rfc2616#section-13 (general)
+            - http://tools.ietf.org/html/rfc2616#section-13.4 (specific)
+              * check the `Expires` header to see if we should even make a request
+                - http://tools.ietf.org/html/rfc2616#section-13.2
+          * consider carefully which headers to store (expires, etag,
+              last-modified, url, etc.)
+          * have the option to send HEAD request in lieu of GET if we have
+              cache headers around (http://tools.ietf.org/html/rfc2616#section-9.4)
+          * break http cache into more general cache interface for the filter to
+              use
+
     """
 
     def __init__(self, cache=BoundedDict()):
