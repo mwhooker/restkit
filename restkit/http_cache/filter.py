@@ -7,7 +7,7 @@
 import logging
 import collections
 from hashlib import md5
-
+from urlparse import urlsplit
 from restkit.http_cache.common import BoundedDict
 
 
@@ -45,8 +45,15 @@ class HttpCache(object):
             raise TypeError
         self.cache_engine = cache
 
-    def _make_key(self, req):
-        return md5(str(req.method) + str(req.final_url)).hexdigest()
+    def _generate_cache_key(self, req):
+        #strip out username and password
+        url = ''.join(urlsplit(req.final_url)[1:4])
+        return "%s:%s" % (req.method, url)
+
+    def _request_cachable(self, req):
+        #only cache GET requests
+        if req.method != "GET":
+            return True
 
     def on_request(self, req):
         """ Set up http caching headers
@@ -54,12 +61,12 @@ class HttpCache(object):
             2. inject if-none-match and If-Modified-Since headers
         """
 
-        # do not cache get requests
-        if req.method != "GET":
+        if not self._request_cachable(req):
             return
 
-        key = self._make_key(req)
-        log.debug("generating hash for request: %s" % key)
+        key = self._generate_cache_key(req)
+        log.debug("caching key %s" % key)
+
         if key in self.cache_engine:
             cache_obj = self.cache_engine[key]
 
@@ -78,11 +85,11 @@ class HttpCache(object):
             2. if status is 200
                 - add to cache
         """
-        # do not cache get requests
-        if req.method != "GET":
+
+        if not self._request_cachable(req):
             return
 
-        url_key = self._make_key(req)
+        url_key = self._generate_cache_key(req)
 
         if req.parser.status_int == 200:
             headers = {}
